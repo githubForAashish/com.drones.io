@@ -8,10 +8,22 @@ spring:
     username: admin
     password: password
     url: jdbc:h2:mem:drone
-
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        check_nullability: True
 logging:
   level:
     org:
       springframework:
         jdbc:
           DEBUG
+server:
+  servlet:
+    context-path: /api
+drone:
+  setting:
+    fleet: 10
+    battery-threshold: 25
