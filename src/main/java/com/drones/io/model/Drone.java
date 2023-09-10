@@ -1,8 +1,8 @@
 package com.drones.io.model;
 
 
-import com.drones.io.enums.DroneState;
 import com.drones.io.enums.DroneModel;
+import com.drones.io.enums.DroneState;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
@@ -11,6 +11,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,7 @@ public class Drone extends BaseEntity {
 
     @Min(0)
     @Max(100)
+    @Value("${drone.setting.initial-battery}")
     @NotNull
     private Integer batteryRemaining;
 

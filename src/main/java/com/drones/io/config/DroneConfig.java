@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 @Setter
 public class DroneConfig {
-    private Integer fleet;
+    private Integer fleetCapacity;
     private Integer batteryThreshold;
+    private Integer initialBattery;
 }

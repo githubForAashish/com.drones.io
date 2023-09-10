@@ -13,6 +13,6 @@ public interface IDronesRepository extends CrudRepository<Drone, String> {
     @EntityGraph(attributePaths = {"medications"})
     Optional<Drone> findBySerialNumber(String serialNumber);
 
-    @Query("SELECT d FROM Drone d JOIN d.medications m WHERE d.batteryRemaining >= :batteryThreshold AND d.state = 'LOADING' GROUP BY d HAVING sum(m.weight) < d.maximumWeightCapacity")
+    @Query("SELECT d FROM Drone d LEFT OUTER JOIN d.medications m WHERE d.batteryRemaining >= :batteryThreshold AND (d.state = 'IDLE' OR d.state = 'LOADING') GROUP BY d HAVING COALESCE(SUM(m.weight), 0) < d.maximumWeightCapacity")
     List<Drone> listDronesAvailableForLoading(Integer batteryThreshold);
 }

@@ -14,6 +14,7 @@ spring:
     properties:
       hibernate:
         check_nullability: True
+    show-sql: true
 logging:
   level:
     org:
@@ -25,5 +26,6 @@ server:
     context-path: /api
 drone:
   setting:
-    fleet: 10
     battery-threshold: 25
+    fleet-capacity: 10
+    initial-battery: 100

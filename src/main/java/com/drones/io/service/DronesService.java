@@ -1,6 +1,5 @@
 package com.drones.io.service;
 
-import com.drones.io.config.DroneConfig;
 import com.drones.io.enums.DroneState;
 import com.drones.io.exception.ApplicationException;
 import com.drones.io.model.Drone;
@@ -8,6 +7,7 @@ import com.drones.io.model.Medication;
 import com.drones.io.repository.IDronesRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,11 +19,16 @@ import static com.drones.io.exception.ApplicationExceptionCodes.*;
 @Transactional
 @Service
 public class DronesService {
+    @Value("${drone.setting.battery-threshold}")
+    private Integer BATTERY_THRESHOLD;
+
+    @Value("${drone.setting.fleet-capacity}")
+    private Integer FLEET_CAPACITY;
+
     private final IDronesRepository dronesRepository;
-    private final DroneConfig droneConfig;
 
     public Drone registerDrone(Drone drone) {
-        if (dronesRepository.count() >= droneConfig.getFleet())
+        if (dronesRepository.count() >= FLEET_CAPACITY)
             throw ApplicationException.create(FLEET_CAPACITY_REACHED);
         return dronesRepository.save(drone);
     }
@@ -44,13 +49,15 @@ public class DronesService {
 
         if (!(drone.getState().equals(DroneState.IDLE) || drone.getState().equals(DroneState.LOADING)))
             throw ApplicationException.create(DRONE_PREOCCUPIED);
-        if (drone.getBatteryRemaining() <= droneConfig.getBatteryThreshold())
+        if (drone.getBatteryRemaining() <= BATTERY_THRESHOLD)
             throw ApplicationException.create(DRONE_BATTERY_TOO_LOW);
 
         int totalNewMedicationsWeight = newMedications.stream().mapToInt(Medication::getWeight).sum();
-        int existingMedicationsWeight =  drone.getMedications().stream().mapToInt(Medication::getWeight).sum();
-        if (existingMedicationsWeight + totalNewMedicationsWeight < drone.getMaximumWeightCapacity()) drone.setState(DroneState.LOADING);
-        else if (drone.getMaximumWeightCapacity().equals(totalNewMedicationsWeight + existingMedicationsWeight)) drone.setState(DroneState.LOADED);
+        int existingMedicationsWeight = drone.getMedications().stream().mapToInt(Medication::getWeight).sum();
+        if (existingMedicationsWeight + totalNewMedicationsWeight < drone.getMaximumWeightCapacity())
+            drone.setState(DroneState.LOADING);
+        else if (drone.getMaximumWeightCapacity().equals(totalNewMedicationsWeight + existingMedicationsWeight))
+            drone.setState(DroneState.LOADED);
         else throw ApplicationException.create(DRONE_OVERLOADED);
 
         drone.addMedications(newMedications);
@@ -59,12 +66,11 @@ public class DronesService {
     }
 
     public List<Drone> getDronesAvailableForLoading() {
-        List<Drone> drones = dronesRepository.listDronesAvailableForLoading(droneConfig.getBatteryThreshold());
-        return drones;
+        return dronesRepository.listDronesAvailableForLoading(BATTERY_THRESHOLD);
     }
 
     public Integer getDroneBatteryLevel(String droneSerialNumber) {
-        Drone drone = dronesRepository.findBySerialNumber(droneSerialNumber).orElseThrow(()->ApplicationException.create(DRONE_NOT_FOUND));
+        Drone drone = dronesRepository.findBySerialNumber(droneSerialNumber).orElseThrow(() -> ApplicationException.create(DRONE_NOT_FOUND));
         return drone.getBatteryRemaining();
     }
 
