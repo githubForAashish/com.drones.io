@@ -59,7 +59,13 @@ public class DronesService {
     }
 
     public List<Drone> getDronesAvailableForLoading() {
-        return dronesRepository.listDronesAvailableForLoading(droneConfig.getBatteryThreshold());
+        List<Drone> drones = dronesRepository.listDronesAvailableForLoading(droneConfig.getBatteryThreshold());
+        return drones;
+    }
+
+    public Integer getDroneBatteryLevel(String droneSerialNumber) {
+        Drone drone = dronesRepository.findBySerialNumber(droneSerialNumber).orElseThrow(()->ApplicationException.create(DRONE_NOT_FOUND));
+        return drone.getBatteryRemaining();
     }
 
 }

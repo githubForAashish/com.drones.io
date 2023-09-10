@@ -1,8 +1,8 @@
 package com.drones.io.controller;
 
-import com.drones.io.service.DronesService;
 import com.drones.io.model.Drone;
 import com.drones.io.model.Medication;
+import com.drones.io.service.DronesService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +14,7 @@ import java.util.List;
 @RequestMapping("/drones")
 @RestController
 public class DronesController {
+
     private final DronesService droneService;
 
     @GetMapping("is-alive")
@@ -41,7 +42,8 @@ public class DronesController {
         return ResponseEntity.ok(droneService.loadMedications(droneSerialNumber, medications));
     }
 
-
-
-
+    @GetMapping("battery-level/{droneSerialNumber}")
+    public ResponseEntity<Integer> droneBatteryLevel(@PathVariable String droneSerialNumber) {
+        return ResponseEntity.ok(droneService.getDroneBatteryLevel(droneSerialNumber));
+    }
 }
