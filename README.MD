@@ -1,7 +1,5 @@
 # Drone Dispatch Controller
 
-[[_TOC_]]
-
 ### Introduction
 This project was prepared as an assessment for **Musala Soft**. A postman collection has been included under `postman` folder for testing.
 A basic project is set up along with 2 Unit Test cases.
