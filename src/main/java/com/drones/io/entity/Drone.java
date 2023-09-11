@@ -1,4 +1,4 @@
-package com.drones.io.model;
+package com.drones.io.entity;
 
 
 import com.drones.io.enums.DroneModel;
@@ -7,11 +7,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,31 +16,32 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name="DRONES")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "DRONES")
 public class Drone extends BaseEntity {
 
-    @Size(min = 1, max = 100)
-    @NotNull
-    @Column(unique = true)
+    @Length(min = 1, max = 100)
+    @Column(nullable = false, unique = true, name = "SERIAL_NUMBER")
     private String serialNumber;
 
     @Enumerated(EnumType.STRING)
-    @NotNull
+    @Column(nullable = false)
     private DroneModel model;
 
     @Min(0)
-    @Max(500)
-    private Integer maximumWeightCapacity;
+    @Column(nullable = false, name = "WEIGHT_LIMIT")
+    private Integer weightLimit;
 
     @Min(0)
     @Max(100)
-    @Value("${drone.setting.initial-battery}")
-    @NotNull
-    private Integer batteryRemaining;
+    @Column(nullable = false, name = "BATTERY_REMAINING")
+    private Integer batteryRemaining = 100;
 
     @Enumerated(EnumType.STRING)
-    @NotNull
-    private DroneState state;
+    @Column(nullable = false)
+    private DroneState state = DroneState.IDLE;
 
     @JsonIgnore
     @OneToMany(mappedBy = "drone", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
@@ -51,6 +49,11 @@ public class Drone extends BaseEntity {
 
     public void addMedications(List<Medication> medications) {
         this.medications.addAll(medications);
-        medications.forEach((medication) -> medication.setDrone(this));
+        medications.forEach(medication -> medication.setDrone(this));
+    }
+
+    public void unloadMedications() {
+        this.medications.forEach(medication -> medication.setDrone(null));
+        this.medications.clear();
     }
 }

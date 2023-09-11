@@ -1,17 +1,13 @@
-package com.drones.io.model;
+package com.drones.io.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.net.URL;
+import java.net.URI;
 
 @Getter
 @Setter
@@ -20,20 +16,18 @@ import java.net.URL;
 public class Medication extends BaseEntity{
 
     @Pattern(regexp = "[a-zA-Z_0-9-]+")
-    @NotNull
     private String name;
 
     @Pattern(regexp = "[A-Z0-9-]+")
-    @NotNull
+    @Column(nullable = false)
     private String code;
 
-
     @Positive
-    @NotNull
+    @Column(nullable = false)
     private Integer weight;
 
-    @NotNull
-    private URL pictureLocation;
+    @Column(name = "PICTURE_LOCATION")
+    private URI pictureLocation;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
