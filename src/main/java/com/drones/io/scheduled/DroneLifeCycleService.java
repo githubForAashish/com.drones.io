@@ -1,5 +1,6 @@
 package com.drones.io.scheduled;
 
+import com.drones.io.config.DroneConfig;
 import com.drones.io.entity.Drone;
 import com.drones.io.enums.DroneState;
 import com.drones.io.repository.IDronesRepository;
@@ -10,7 +11,6 @@ import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -23,15 +23,14 @@ public class DroneLifeCycleService {
 
   /** Prepare Log from {@link Drone} */
   private static final Consumer<Drone> MakeLog =
-      (Drone drone) -> log.info(
-          String.format(
-              "|Drone: %1$10s|\t|Battery Left: %2$5s|\t|State: %3$10s|",
-              drone.getSerialNumber(), drone.getBatteryRemaining(), drone.getState()));
+      (Drone drone) ->
+          log.info(
+              String.format(
+                  "|Drone: %1$10s|\t|Battery Left: %2$5s|\t|State: %3$10s|",
+                  drone.getSerialNumber(), drone.getBatteryRemaining(), drone.getState()));
 
+  private final DroneConfig droneConfig;
   private final IDronesRepository dronesRepository;
-
-  @Value("${drone.setting.decay-rate}")
-  private Float DECAY_RATE;
 
   /**
    * Scheduled task for simulation of drone activity. Facilitates state transitions. Also incurs
@@ -39,6 +38,9 @@ public class DroneLifeCycleService {
    */
   @Scheduled(fixedRateString = "${scheduler.interval}", timeUnit = TimeUnit.SECONDS)
   public void simulateDroneActivity() {
+
+    // Log Battery Information
+    logBatteryInfo();
 
     // Returning drones are now inactive and ready for loading.
     updateDroneState(DroneState.RETURNING, DroneState.IDLE);
@@ -52,9 +54,6 @@ public class DroneLifeCycleService {
     // Start Delivery of drones in "LOADED" or "LOADING" state.
     updateDroneState(DroneState.LOADING, DroneState.DELIVERING);
     updateDroneState(DroneState.LOADED, DroneState.DELIVERING);
-
-    // Log Battery Information
-    logBatteryInfo();
   }
 
   private void logBatteryInfo() {
@@ -62,9 +61,9 @@ public class DroneLifeCycleService {
   }
 
   /**
-   * Updates state of drones. A battery decay is incurred on every invocation using {@link
-   * DroneLifeCycleService#DECAY_RATE}. If state transition from {@link DroneState#DELIVERING} ->
-   * {@link DroneState#DELIVERED}, unload the drone.
+   * Updates state of drones. A battery decay is incurred on every invocation using a decay rate. If
+   * state transition from {@link DroneState#DELIVERING} -> {@link DroneState#DELIVERED}, unload the
+   * drone.
    *
    * @param currentState Current State of Drones
    * @param nextState Next State of Drones
@@ -73,7 +72,8 @@ public class DroneLifeCycleService {
     List<Drone> drones = dronesRepository.findAllByState(currentState);
     drones.forEach(
         drone -> {
-          drone.setBatteryRemaining((int) (drone.getBatteryRemaining() * (1.0 - DECAY_RATE)));
+          drone.setBatteryRemaining(
+              (int) (drone.getBatteryRemaining() * (1.0 - droneConfig.getDecayRate())));
           drone.setState(nextState);
           if (nextState.equals(DroneState.DELIVERED)) drone.unloadMedications();
         });

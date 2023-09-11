@@ -7,11 +7,13 @@ import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
 public class RegisterDroneRequestSchema {
 
   @Size(min = 1, max = 100, message = "must be between 1 and 100 characters")

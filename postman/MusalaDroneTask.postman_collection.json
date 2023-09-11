@@ -1,0 +1,173 @@
+{
+	"info": {
+		"_postman_id": "fcf06527-4091-413a-ba0f-1f5f8dbd608f",
+		"name": "MusalaDroneTask",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3284315",
+		"_collection_link": "https://cloudy-star-529393.postman.co/workspace/Team-Workspace~25bf4221-a2ed-4707-8c83-1d3658613453/collection/3284315-fcf06527-4091-413a-ba0f-1f5f8dbd608f?action=share&source=collection_link&creator=3284315"
+	},
+	"item": [
+		{
+			"name": "Register Drone",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"serialNumber\":\"DX_P-01\",\r\n    \"model\": \"HEAVYWEIGHT\",\r\n    \"weightLimit\": 500\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/drones/register-drone",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"drones",
+						"register-drone"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check Loaded Medications",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/drones/fetch-loaded-medications/DX_P-01",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"drones",
+						"fetch-loaded-medications",
+						"DX_P-01"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Load Drone",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"name\": \"Amoxicillin\",\r\n        \"code\": \"AMX-515\",\r\n        \"weight\": 100,\r\n        \"pictureLocation\": \"http://localhost.com/hahaha\"\r\n    }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/drones/load-drone/DX_P-01",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"drones",
+						"load-drone",
+						"DX_P-01"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Available Drones",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/drones/fetch-available-drones",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"drones",
+						"fetch-available-drones"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Drone Battery Level",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/drones/battery-level/DR_E-02",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"drones",
+						"battery-level",
+						"DR_E-02"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "All Drones",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/drones/fetch-all-drones",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"drones",
+						"fetch-all-drones"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Drone by SerialNumber",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/drones/fetch-drone/DX_P-01",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"drones",
+						"fetch-drone",
+						"DX_P-01"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

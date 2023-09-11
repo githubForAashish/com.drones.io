@@ -2,6 +2,7 @@ package com.drones.io.service;
 
 import static com.drones.io.exception.ApplicationExceptionCodes.*;
 
+import com.drones.io.config.DroneConfig;
 import com.drones.io.entity.Drone;
 import com.drones.io.entity.Medication;
 import com.drones.io.enums.DroneState;
@@ -15,7 +16,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -23,16 +23,11 @@ import org.springframework.stereotype.Service;
 public class DronesService {
   private final IDronesRepository dronesRepository;
   private final ModelMapper modelMapper;
-
-  @Value("${drone.setting.battery-threshold}")
-  private Integer BATTERY_THRESHOLD;
-
-  @Value("${drone.setting.fleet-capacity}")
-  private Integer FLEET_CAPACITY;
+  private final DroneConfig droneConfig;
 
   public DroneDTO registerDrone(RegisterDroneRequestSchema drone) {
     Drone newDrone = modelMapper.map(drone, Drone.class);
-    if (dronesRepository.count() >= FLEET_CAPACITY)
+    if (dronesRepository.count() >= droneConfig.getFleetCapacity())
       throw ApplicationException.create(FLEET_CAPACITY_REACHED);
     if (dronesRepository.findBySerialNumber(drone.getSerialNumber()).isPresent())
       throw ApplicationException.create(DRONE_ALREADY_REGISTERED);
@@ -83,7 +78,7 @@ public class DronesService {
 
     if (!(drone.getState().equals(DroneState.IDLE) || drone.getState().equals(DroneState.LOADING)))
       throw ApplicationException.create(DRONE_PREOCCUPIED);
-    if (drone.getBatteryRemaining() <= BATTERY_THRESHOLD)
+    if (drone.getBatteryRemaining() <= droneConfig.getBatteryThreshold())
       throw ApplicationException.create(DRONE_BATTERY_TOO_LOW);
 
     int totalNewMedicationsWeight = newMedications.stream().mapToInt(Medication::getWeight).sum();
@@ -101,7 +96,9 @@ public class DronesService {
   }
 
   public List<DroneDTO> getDronesAvailableForLoading() {
-    return dronesRepository.listDronesAvailableForLoading(BATTERY_THRESHOLD).stream()
+    return dronesRepository
+        .listDronesAvailableForLoading(droneConfig.getBatteryThreshold())
+        .stream()
         .map(drone -> modelMapper.map(drone, DroneDTO.class))
         .collect(Collectors.toList());
   }

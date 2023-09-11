@@ -38,7 +38,7 @@ drone:
   setting:
     battery-threshold: 25
     fleet-capacity: 10
-    decay-rate: 0.98
+    decay-rate: 0.15
     maximum-weight-limit: 500
 scheduler:
   enable: true
