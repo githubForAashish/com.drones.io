@@ -23,12 +23,10 @@ public class DroneLifeCycleService {
 
   /** Prepare Log from {@link Drone} */
   private static final Consumer<Drone> MakeLog =
-      (Drone drone) -> {
-        log.info(
-            String.format(
-                "|Drone: %1$10s|\t|Battery Left: %2$5s|\t|State: %3$10s|",
-                drone.getSerialNumber(), drone.getBatteryRemaining(), drone.getState()));
-      };
+      (Drone drone) -> log.info(
+          String.format(
+              "|Drone: %1$10s|\t|Battery Left: %2$5s|\t|State: %3$10s|",
+              drone.getSerialNumber(), drone.getBatteryRemaining(), drone.getState()));
 
   private final IDronesRepository dronesRepository;
 
