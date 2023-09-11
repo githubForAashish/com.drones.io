@@ -2,7 +2,6 @@ package com.drones.io.validator;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
-
 import java.lang.annotation.*;
 
 @Target({ElementType.FIELD})
@@ -11,9 +10,9 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = MaximumWeightCapacityValidator.class)
 public @interface MaximumWeightCapacity {
 
-        String message() default "must be less than or equal to %s";
+  String message() default "must be less than or equal to %s";
 
-        Class<?>[] groups() default { };
+  Class<?>[] groups() default {};
 
-        Class<? extends Payload>[] payload() default { };
+  Class<? extends Payload>[] payload() default {};
 }

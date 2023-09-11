@@ -8,9 +8,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DroneDTO {
-    private String serialNumber;
-    private DroneModel model;
-    private Integer weightLimit;
-    private Integer batteryRemaining;
-    private DroneState droneState;
+  private String serialNumber;
+  private DroneModel model;
+  private Integer weightLimit;
+  private Integer batteryRemaining;
+  private DroneState droneState;
 }

@@ -7,6 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+/** Configurations needed by scheduler. */
 @EnableScheduling
 @ConditionalOnProperty(prefix = "scheduler", name = "enable")
 @Configuration
@@ -14,6 +15,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @Getter
 @Setter
 public class SchedulerConfig {
-    private Boolean enable;
-    private Integer interval;
+  private Boolean enable;
+  private Integer interval;
 }

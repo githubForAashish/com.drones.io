@@ -14,16 +14,15 @@ import lombok.Setter;
 @Setter
 public class RegisterDroneRequestSchema {
 
-    @Size(min = 1, max = 100, message = "must be between 1 and 100 characters")
-    @NotBlank(message = "Must provide value for this field")
-    private String serialNumber;
+  @Size(min = 1, max = 100, message = "must be between 1 and 100 characters")
+  @NotBlank(message = "Must provide value for this field")
+  private String serialNumber;
 
-    @Enumerated(EnumType.STRING)
-    @NotNull(message = "Must provide a drone model.")
-    private DroneModel model;
+  @Enumerated(EnumType.STRING)
+  @NotNull(message = "Must provide a drone model.")
+  private DroneModel model;
 
-    @MaximumWeightCapacity
-    @NotNull(message = "Must provide medication carrying capacity.")
-    private Integer weightLimit;
-
+  @MaximumWeightCapacity
+  @NotNull(message = "Must provide medication carrying capacity.")
+  private Integer weightLimit;
 }
