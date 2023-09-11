@@ -1,10 +1,6 @@
 package com.drones.io.config;
 
-import com.drones.io.entity.Drone;
-import com.drones.io.enums.DroneModel;
-import com.drones.io.repository.IDronesRepository;
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

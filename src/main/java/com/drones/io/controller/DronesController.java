@@ -5,7 +5,6 @@ import com.drones.io.payload.MedicationDTO;
 import com.drones.io.payload.RegisterDroneRequestSchema;
 import com.drones.io.service.DronesService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
